@@ -1,4 +1,4 @@
-# PyDyctSql
+# PyDictSql
 Python str dict to sql DDl Table converter
 
 EXAMPLE USAGE
