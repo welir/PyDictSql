@@ -28,3 +28,20 @@ RESULT
   B varchar(512),
   C decimal,
   D datetime2(7));
+
+
+ANOTHER EXAMPLE USAGE
+      d1 = {}  # to make a dictionary
+print(type(d1))  # to print a dictionary
+d2 = {"Alex": "Fried rice", "Karen": "Noodles", "Sarah": "Burger",
+      "Sherlock": {"b": "Manchurian", "l": "Rice", "d": "Chicken"}}  # to make another dictionary
+d2["Andrew"] = "Junk food"  # to add keys and items
+d2[452] = "Barbeques"  # to add keys and items
+del d2[452]  # to remove keys and items
+print(d2)  # to print second dictionary
+d3 = d2.copy()  # to make a copy and new dictionary of d2
+del d3["Alex"]  # to remove keys and items
+print(d3)  # to print the third dictionary
+d2.update({"Rock": "Candies"})  # to add keys and items-second method
+print(d2.items())  # to print the items only
+print(d2.keys())  # to print the keys only
