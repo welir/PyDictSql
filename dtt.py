@@ -1,8 +1,10 @@
 import ast
 import datetime
+
+
 class DictToTable:
     dict_array = {}
-    date_formats = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M:%S.%f',  '%m/%d/%Y', '%Y-%m-%d', '%d.%m.%Y']
+    date_formats = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M:%S.%f', '%m/%d/%Y', '%Y-%m-%d', '%d.%m.%Y']
 
     def __init__(self, array_dict):
         self.dict_array = array_dict
@@ -27,32 +29,35 @@ class DictToTable:
             return False
 
     def get_data_type(self, val):
-        try:
-            # Evaluates numbers to an appropriate type, and strings an error
-            if self.validate_date(val):
-                t = datetime.datetime.now()
-            else:
-                t = ast.literal_eval(val)
+        # try:
+        # Evaluates numbers to an appropriate type, and strings an error
+        # if self.validate_date(val):
+        #     t = datetime.datetime.now()
+        # else:
+        #     t = ast.literal_eval(val)
 
-        except ValueError:
-            return 'varchar'
-        except SyntaxError:
-            return 'varchar'
+        # except ValueError:
+        #     pass
+        # except SyntaxError:
+        #     return 'varchar'
 
-        if type(t) in [int, float]:
-           if (type(t) in [int]) :
-               # Use smallest possible int type
-               if (-32768 < t < 32767):
-                   return 'smallint'
-               elif (-2147483648 < t < 2147483647):
-                   return 'int'
-               else:
-                   return 'bigint'
-           if type(t) is float:
-               return 'decimal'
+        if type(val) == dict:
+            return 'dict'
+
+        if type(val) in [int, float]:
+            if (type(val) in [int]):
+                # Use smallest possible int type
+                if (-32768 < val < 32767):
+                    return 'smallint'
+                elif (-2147483648 < val < 2147483647):
+                    return 'int'
+                else:
+                    return 'bigint'
+            if type(val) is float:
+                return 'decimal'
 
         else:
-            if isinstance(t, datetime.datetime):
+            if isinstance(val, datetime.datetime):
                 return 'datetime2(7)'
 
             return 'varchar'
@@ -62,10 +67,9 @@ class DictToTable:
 
         for key, value in dict_array.items():
             if self.get_data_type(value) == 'varchar':
-
-                headers.append([key, self.get_data_type(value), 512])
+                headers.append([key, self.get_data_type(value), 512, value])
             else:
-                headers.append([key, self.get_data_type(value), -1])
+                headers.append([key, self.get_data_type(value), -1, value])
 
         return headers
 
@@ -82,7 +86,14 @@ class DictToTable:
                 statement = (statement + '\n{} varchar({}),').format(h[0].upper(), str(h[2]))
 
             else:
-                statement = (statement + '\n' + '{} {}' + ',').format(h[0].upper(), h[1])
+                if (h[1] == 'dict'):
+
+                    d = DictToTable(h[3])
+                    print("")
+                    print(d.create_ddl_string(h[0]))
+                    print("")
+                else:
+                    statement = (statement + '\n' + '{} {}' + ',').format(h[0].upper(), h[1])
 
         statement = statement[:-1] + ');'
 

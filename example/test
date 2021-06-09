@@ -1,0 +1,9 @@
+{
+    "name": {
+        "original": "STATION-ID",
+        "custom": ""
+    },
+    "a": 1,
+    "B": "b",
+    "c": 1.23
+}
